@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 
 class chat1 extends StatelessWidget {
@@ -8,7 +6,6 @@ class chat1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -113,8 +110,9 @@ Widget chat(context) {
                               IconButton(
                                 onPressed: () {
                                   showModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
                                       context: context,
-                                      builder: (Builder) => bottomsheet());
+                                      builder: (builder) => bottomsheet());
                                 },
                                 icon: Icon(Icons.attach_file),
                               ),
@@ -149,9 +147,76 @@ Widget chat(context) {
 Widget bottomsheet() {
   return Container(
     height: 278,
-    //width: MediaQuery.of(context).size.width,
+    width: 400,
     child: Card(
       margin: EdgeInsets.all(18),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                iconcreation(
+                    Icons.insert_drive_file, Colors.indigo, "Documents"),
+                SizedBox(
+                  width: 40,
+                ),
+                iconcreation(Icons.camera_alt, Colors.pink, "Camera"),
+                SizedBox(
+                  width: 40,
+                ),
+                iconcreation(Icons.insert_photo, Colors.purple, "Gallary"),
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                iconcreation(Icons.headset, Colors.orange, "Audio"),
+                SizedBox(
+                  width: 40,
+                ),
+                iconcreation(Icons.location_pin, Colors.teal, "Location"),
+                SizedBox(
+                  width: 40,
+                ),
+                iconcreation(Icons.person, Colors.blue, "Contact"),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget iconcreation(IconData icon, Color color, String text) {
+  return InkWell(
+    onTap: () {},
+    child: Column(
+      children: [
+        CircleAvatar(
+          backgroundColor: color,
+          radius: 30,
+          child: Icon(
+            icon,
+            size: 29,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
+      ],
     ),
   );
 }

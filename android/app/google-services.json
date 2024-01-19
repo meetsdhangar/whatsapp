@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "188689305252",
+    "project_id": "whatsapp-prectice",
+    "storage_bucket": "whatsapp-prectice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188689305252:android:1450615c3ae1058edea031",
+        "android_client_info": {
+          "package_name": "com.example.whatsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnYzAsPjanw_2YNvoWSbfrA7wxQh7B3H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

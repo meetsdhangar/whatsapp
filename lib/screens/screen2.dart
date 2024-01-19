@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/screens/loginscreen.dart';
-import 'package:whatsapp/screens/signup.dart';
+
 
 import 'mychat.dart';
 
@@ -13,8 +12,6 @@ class Screeen2 extends StatefulWidget {
 
 var myIndex = 0;
 var screens = [
-  signup(),
-  LoginScreen(),
   mychat(),
 ];
 

@@ -7,6 +7,7 @@ class screen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
         toolbarHeight: 70,
         backgroundColor: Colors.green,

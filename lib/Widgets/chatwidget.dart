@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
-import 'package:whatsapp/screens/screen1.dart';
+import 'package:whatsapp/screens/chatscreen.dart';
 
-Widget mychat() {
+Widget Chatwidget() {
   final logincontroller = Get.find<Logincontroller>();
 
   return Column(
@@ -14,8 +13,8 @@ Widget mychat() {
         child: StreamBuilder(
             stream: logincontroller.firestore
                 .collection('users')
-                .where('id',
-                    isNotEqualTo: '${logincontroller.loginuser.value?.id}')
+                // .where('id',
+                //     isNotEqualTo: '${logincontroller.loginuser.value?.id}')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -36,8 +35,8 @@ Widget mychat() {
                             width: 60,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/profile1.jpg"),
+                                  image: NetworkImage(users[index].profile),
+                                  // AssetImage("assets/images/profile1.jpg"),
                                   fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(60),
                             ),
@@ -45,7 +44,9 @@ Widget mychat() {
                           title: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => screen1(),
+                                builder: (context) => Chatscreen(
+                                  oppUser: users[index],
+                                ),
                               ));
                             },
                             child: Text(

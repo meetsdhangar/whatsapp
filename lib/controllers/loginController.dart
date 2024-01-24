@@ -11,10 +11,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
 import 'package:whatsapp/screens/addnewuser.dart';
 
-import 'package:whatsapp/screens/home.dart';
-import 'package:whatsapp/screens/login.dart';
+import 'package:whatsapp/screens/homeScreen.dart';
+import 'package:whatsapp/screens/loginScreen.dart';
 
-import 'package:whatsapp/screens/otp.dart';
+import 'package:whatsapp/screens/otpScreen.dart';
 import 'package:image/image.dart' as img;
 
 class Logincontroller extends GetxController {
@@ -37,8 +37,8 @@ class Logincontroller extends GetxController {
     if (user == null) {
       Get.offAll(() => login());
     } else {
-      Get.offAll(() => chatpage());
-      // getUsersData().then((value) => Get.offAll(() => chatpage()));
+      //Get.offAll(() => chatpage());
+      getUsersData().then((value) => Get.offAll(() => HomeScreen()));
     }
   }
 
@@ -81,7 +81,9 @@ class Logincontroller extends GetxController {
           .signInWithCredential(credential)
           .then((auth) => checkuser().then((check) {
                 if (check == true) {
-                  Get.to(() => chatpage());
+                  getUsersData()
+                      .then((value) => Get.offAll(() => HomeScreen()));
+                  // Get.to(() => HomeScreen());
                 } else {
                   Get.to(() => AddNewUserScreen());
                 }
@@ -143,10 +145,8 @@ class Logincontroller extends GetxController {
 
   addnewuser(String name, File myfile) async {
     print(myfile.path);
-    await uploadImageToFirebase(myfile)
-        // storeDataInStorage(
-        //         'profieImages/${auth.currentUser?.phoneNumber.toString()}',
-        //         myfile)
+    await storeDataInStorage(
+            'profieImages/${auth.currentUser?.phoneNumber.toString()}', myfile)
         .then((url) {
       final time = DateTime.now().millisecondsSinceEpoch.toString();
       final user = ChatUser(
@@ -165,7 +165,7 @@ class Logincontroller extends GetxController {
           .collection('users')
           .doc('${auth.currentUser?.phoneNumber}')
           .set(user.toMap())
-          .then((value) => Get.offAll(chatpage()));
+          .then((value) => Get.offAll(HomeScreen()));
     });
   }
 
@@ -184,6 +184,33 @@ class Logincontroller extends GetxController {
             createdAt: snapshot['created_at'],
             id: snapshot['id']));
     return true;
+  }
+
+  // updateUserData(String name, String about, File image) async {
+  //   var time = DateTime.now().millisecondsSinceEpoch.toString();
+  //   await storeDataInStorage(
+  //           'profieImages/${auth.currentUser?.phoneNumber.toString()}', image)
+  //       .then((value) {
+  //     firestore
+  //         .collection('users')
+  //         .doc('${auth.currentUser?.phoneNumber}')
+  //         .update({name: name, about: about, image: value});
+
+  //     getUsersData();
+  //   });
+  // }
+  updateuserdata(
+    String name,
+    String about,
+  ) async {
+    await firestore
+        .collection('users')
+        .doc('${auth.currentUser?.phoneNumber}')
+        .update({
+      name: name,
+      about: about,
+    });
+    getUsersData();
   }
 
   giveSpecificUser() {

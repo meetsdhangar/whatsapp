@@ -18,14 +18,16 @@ class login extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 75, left: 73),
+              padding: const EdgeInsets.only(left: 50, top: 50),
               child: Row(
                 children: [
-                  "Enter your phone number"
-                      .text
-                      .size(23)
-                      .fontWeight(FontWeight.w500)
-                      .make(),
+                  Center(
+                    child: "Enter your phone number"
+                        .text
+                        .size(23)
+                        .fontWeight(FontWeight.w500)
+                        .make(),
+                  ),
                   10.widthBox,
                   Icon(
                     Icons.more_vert,
@@ -48,7 +50,7 @@ class login extends StatelessWidget {
                 .make(),
             70.heightBox,
             Container(
-                width: 200,
+                width: 150,
                 child: TextFormField(
                   controller: mobilecontroller,
                   keyboardType: TextInputType.number,

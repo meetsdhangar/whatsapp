@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/firebase_options.dart';
-import 'package:whatsapp/screens/profile.dart';
+import 'package:whatsapp/screens/chatscreen.dart';
+import 'package:whatsapp/Widgets/messageWidget.dart';
+import 'package:whatsapp/screens/profileScreen.dart';
 
-import 'package:whatsapp/screens/splashs.dart';
+import 'package:whatsapp/screens/splashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return DismissKeyboard(
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'WhatsApp',

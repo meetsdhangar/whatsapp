@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-
-import 'mychat.dart';
+import '../Widgets/chatwidget.dart';
 
 class Screeen2 extends StatefulWidget {
   const Screeen2({super.key});
@@ -12,7 +11,7 @@ class Screeen2 extends StatefulWidget {
 
 var myIndex = 0;
 var screens = [
-  mychat(),
+  Chatwidget(),
 ];
 
 class _Screeen2State extends State<Screeen2> {

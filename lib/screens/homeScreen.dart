@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/controllers/loginController.dart';
-import 'package:whatsapp/screens/calls.dart';
-import 'package:whatsapp/screens/mychat.dart';
-import 'package:whatsapp/screens/profile.dart';
+import 'package:whatsapp/Widgets/callswidget.dart';
+import 'package:whatsapp/Widgets/chatwidget.dart';
+import 'package:whatsapp/screens/profileScreen.dart';
 import 'package:whatsapp/screens/selectcontact.dart';
-import 'package:whatsapp/screens/status.dart';
+import 'package:whatsapp/Widgets/statuswidget.dart';
 
-class chatpage extends StatelessWidget {
-  const chatpage({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class chatpage extends StatelessWidget {
           ],
         ),
         body: TabBarView(
-          children: [mychat(), status(), Calls()],
+          children: [Chatwidget(), StatusWidget(), Callswidget()],
         ),
       ),
     );

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
 import 'package:whatsapp/screens/chatscreen.dart';
 
 Widget Chatwidget() {
   final logincontroller = Get.find<Logincontroller>();
-
+  final homecontroller = Get.put(HomeController());
   return Column(
     children: [
       Expanded(
@@ -24,7 +25,6 @@ Widget Chatwidget() {
                     data?.map((e) => ChatUser.fromMap(e.data())).toList() ?? [];
 
                 return ListView.builder(
-                  //scrollDirection: Axis.horizontal,
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     return Padding(
@@ -36,7 +36,6 @@ Widget Chatwidget() {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: NetworkImage(users[index].profile),
-                                  // AssetImage("assets/images/profile1.jpg"),
                                   fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(60),
                             ),
@@ -61,10 +60,12 @@ Widget Chatwidget() {
                               SizedBox(
                                 width: 4,
                               ),
-                              Text(users[index].about),
+                              Expanded(child: Text(users[index].about)),
                             ],
                           ),
-                          trailing: Text(users[index].lastSeen),
+                          trailing: Text(homecontroller.getFormatedDate(
+                              context: context,
+                              time: logincontroller.loginuser.value!.lastSeen)),
                         ));
                   },
                 );

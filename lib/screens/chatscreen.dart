@@ -60,7 +60,10 @@ class Chatscreen extends StatelessWidget {
                   Text(
                     oppUser.id == logincontroller.loginuser.value?.id
                         ? 'Message Yourself'
-                        : oppUser.lastSeen,
+                        : oppUser.isActive == true
+                            ? 'Online'
+                            : homecontroller.getLastSeen(
+                                context: context, time: oppUser.lastSeen),
                     style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,

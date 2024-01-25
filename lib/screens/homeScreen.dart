@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/Widgets/callswidget.dart';
@@ -7,8 +10,36 @@ import 'package:whatsapp/screens/profileScreen.dart';
 import 'package:whatsapp/screens/selectcontact.dart';
 import 'package:whatsapp/Widgets/statuswidget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+final logincontroller = Get.find<Logincontroller>();
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    logincontroller.updateActiveStatus(true);
+
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log(message.toString());
+      if (message.toString().contains('paused') ||
+          message.toString().contains('inactive')) {
+        setState(() {
+          logincontroller.updateActiveStatus(false);
+        });
+      } else {
+        setState(() {
+          logincontroller.updateActiveStatus(true);
+        });
+      }
+      return Future.value(message);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

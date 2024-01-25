@@ -44,6 +44,7 @@ class Logincontroller extends GetxController {
 
   userlogout() {
     auth.signOut();
+    updateActiveStatus(false);
     Get.offAll(() => login());
   }
 
@@ -166,6 +167,7 @@ class Logincontroller extends GetxController {
           .doc('${auth.currentUser?.phoneNumber}')
           .set(user.toMap())
           .then((value) => Get.offAll(HomeScreen()));
+      selectedProfile.value = '';
     });
   }
 
@@ -183,34 +185,32 @@ class Logincontroller extends GetxController {
             name: snapshot['name'],
             createdAt: snapshot['created_at'],
             id: snapshot['id']));
+
     return true;
   }
 
-  // updateUserData(String name, String about, File image) async {
-  //   var time = DateTime.now().millisecondsSinceEpoch.toString();
-  //   await storeDataInStorage(
-  //           'profieImages/${auth.currentUser?.phoneNumber.toString()}', image)
-  //       .then((value) {
-  //     firestore
-  //         .collection('users')
-  //         .doc('${auth.currentUser?.phoneNumber}')
-  //         .update({name: name, about: about, image: value});
+  updateUserData(String username, String userabout, String image) async {
+    var time = DateTime.now().millisecondsSinceEpoch.toString();
 
-  //     getUsersData();
-  //   });
-  // }
-  updateuserdata(
-    String name,
-    String about,
-  ) async {
     await firestore
         .collection('users')
         .doc('${auth.currentUser?.phoneNumber}')
-        .update({
-      name: name,
-      about: about,
+        .update({'name': username, 'about': userabout, 'profile': image}).then(
+            (value) {
+      getUsersData().then((value) {
+        Get.back();
+        selectedProfile.value = '';
+      });
     });
-    getUsersData();
+  }
+
+  updateActiveStatus(status) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    await firestore
+        .collection('users')
+        .doc(loginuser.value?.id)
+        .update({'is_active': status, 'last_seen': time});
   }
 
   giveSpecificUser() {

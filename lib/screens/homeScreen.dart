@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/Utils/colors.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/Widgets/callswidget.dart';
 import 'package:whatsapp/Widgets/chatwidget.dart';
@@ -51,22 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          toolbarHeight: 70,
-          backgroundColor: Color.fromARGB(255, 4, 86, 4),
-          leadingWidth: 30,
+          toolbarHeight: 55,
+          backgroundColor: Color(0xff075E54),
           title: Text(
             "WhatsApp",
             style: TextStyle(color: Colors.white),
           ),
           actions: [
-            InkWell(
-              onTap: () {
-                logincontroller.userlogout();
-              },
-              child: Icon(
-                Icons.camera_alt_outlined,
-                color: Colors.white,
-              ),
+            Icon(
+              Icons.camera_alt_outlined,
+              color: Colors.white,
             ),
             SizedBox(
               width: 25,
@@ -104,6 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       PopupMenuItem(
                         child: Text("Payments"),
                         value: "Payments",
+                      ),
+                      PopupMenuItem(
+                        onTap: () {
+                          logincontroller.userlogout();
+                        },
+                        child: Text("Logout"),
+                        value: "Logout",
                       ),
                       PopupMenuItem(
                         onTap: () {
@@ -152,34 +154,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     ))),
               ]),
         ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            InkWell(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return selectcontact();
-                  },
-                ),
-              ),
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(50)),
-                child: Icon(
-                  Icons.message,
-                  color: Colors.white,
-                ),
-              ),
+        floatingActionButton: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return Selectcontact();
+              },
             ),
-          ],
+          ),
+          child: Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+                color: tealDarkGreenColor,
+                borderRadius: BorderRadius.circular(50)),
+            child: Icon(
+              Icons.message,
+              color: Colors.white,
+            ),
+          ),
         ),
         body: TabBarView(
-          children: [Chatwidget(), StatusWidget(), Callswidget()],
+          children: [Chatwidget(), StatusWidget(context), Callswidget()],
         ),
       ),
     );

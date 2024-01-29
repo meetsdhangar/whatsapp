@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/firebase_options.dart';
+import 'package:whatsapp/screens/selectcontact.dart';
 
 import 'package:whatsapp/screens/splashScreen.dart';
 

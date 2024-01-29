@@ -28,45 +28,48 @@ Widget Chatwidget() {
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ListTile(
-                          leading: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(users[index].profile),
-                                  fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(60),
-                            ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: ListTile(
+                        leading: Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(users[index].profile),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(60),
                           ),
-                          title: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Chatscreen(
-                                  oppUser: users[index],
-                                ),
-                              ));
-                            },
-                            child: Text(
-                              users[index].name,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17),
-                            ),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Icon(Icons.done_all),
-                              SizedBox(
-                                width: 4,
+                        ),
+                        title: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Chatscreen(
+                                oppUser: users[index],
                               ),
-                              Expanded(child: Text(users[index].about)),
-                            ],
+                            ));
+                          },
+                          child: Text(
+                            users[index].name,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
                           ),
-                          trailing: Text(homecontroller.getFormatedDate(
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Icon(Icons.done_all),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Expanded(child: Text(users[index].about)),
+                          ],
+                        ),
+                        trailing: Text(
+                          homecontroller.getFormatedDate(
                               context: context,
-                              time: logincontroller.loginuser.value!.lastSeen)),
-                        ));
+                              time: logincontroller.loginuser.value!.lastSeen),
+                        ),
+                      ),
+                    );
                   },
                 );
               } else {

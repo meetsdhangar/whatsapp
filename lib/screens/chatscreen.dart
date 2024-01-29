@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:whatsapp/Utils/colors.dart';
 import 'package:whatsapp/chat.dart';
 import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/controllers/loginController.dart';
@@ -20,8 +23,9 @@ class Chatscreen extends StatelessWidget {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: Colors.green,
+          titleSpacing: 10,
+          toolbarHeight: 80,
+          backgroundColor: tealDarkGreenColor,
           leadingWidth: 30,
           leading: InkWell(
             onTap: () => Navigator.pop(context),
@@ -36,8 +40,8 @@ class Chatscreen extends StatelessWidget {
           title: Row(
             children: [
               Container(
-                height: 60,
-                width: 60,
+                height: 50,
+                width: 50,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: NetworkImage(oppUser.profile),
@@ -48,49 +52,54 @@ class Chatscreen extends StatelessWidget {
               SizedBox(
                 width: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    oppUser.id == logincontroller.loginuser.value?.id
-                        ? 'Me'
-                        : "${oppUser.name}",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    oppUser.id == logincontroller.loginuser.value?.id
-                        ? 'Message Yourself'
-                        : oppUser.isActive == true
-                            ? 'Online'
-                            : homecontroller.getLastSeen(
-                                context: context, time: oppUser.lastSeen),
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  )
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      oppUser.id == logincontroller.loginuser.value?.id
+                          ? 'Me'
+                          : "${oppUser.name}",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      oppUser.id == logincontroller.loginuser.value?.id
+                          ? 'Message Yourself'
+                          : oppUser.isActive == true
+                              ? 'Online'
+                              : homecontroller.getLastSeen(
+                                  context: context, time: oppUser.lastSeen),
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
+                    )
+                  ],
+                ),
               ),
             ],
           ),
           actions: [
             Icon(
-              Icons.video_call,
+              Icons.videocam,
               color: Colors.white,
+              size: 30,
             ),
             SizedBox(
-              width: 25,
+              width: 10,
             ),
             Icon(
               Icons.call,
+              size: 30,
               color: Colors.white,
             ),
             SizedBox(
-              width: 25,
+              width: 10,
             ),
             Icon(
               Icons.more_vert,
               color: Colors.white,
+              size: 30,
             ),
             SizedBox(
               width: 10,
@@ -122,14 +131,17 @@ class Chatscreen extends StatelessWidget {
                       }
                       return ListView.builder(
                         itemCount: messagelist.length,
+                        reverse: true,
                         itemBuilder: (context, index) {
+
+                          var newindex = messagelist.length - 1 - index;
                           if (messagelist[index].fromId ==
                               logincontroller.loginuser.value?.id) {
                             return SenderMessageWidget(
-                                context, messagelist[index]);
+                                context, messagelist[newindex]);
                           } else {
                             return RecieverMessageWidget(
-                                context, messagelist[index]);
+                                context, messagelist[newindex]);
                           }
                         },
                       );
@@ -170,12 +182,21 @@ class Chatscreen extends StatelessWidget {
                                   showModalBottomSheet(
                                       backgroundColor: Colors.transparent,
                                       context: context,
-                                      builder: (builder) => bottomsheet());
+                                      builder: (builder) =>
+                                          bottomsheet(oppUser));
                                 },
                                 icon: Icon(Icons.attach_file),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // homecontroller
+                                  //     .sendChatImage(oppUser, File(oppUser.profile))
+                                  //     .then((imageurl) =>
+                                  //         homecontroller.sendmessage(
+                                  //             oppUser,
+                                  //             imageurl,
+                                  //             Type.Image));
+                                },
                                 icon: Icon(Icons.camera_alt),
                               ),
                             ],

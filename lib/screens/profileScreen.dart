@@ -40,56 +40,61 @@ class Profile extends StatelessWidget {
               },
               child: Icon(Icons.arrow_back)),
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: InkWell(
-                    onTap: () async {
-                      await logincontroller.pickImage();
-                    },
-                    child: logincontroller.selectedProfile.value == ''
-                        ? CircleAvatar(
-                            radius: 80,
-                            backgroundImage: NetworkImage(
-                                logincontroller.loginuser.value!.profile),
-                          )
-                        : CircleAvatar(
-                            radius: 80,
-                            backgroundImage: FileImage(
-                                File(logincontroller.selectedProfile.value)),
-                          ),
-                  ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: InkWell(
+                  onTap: () async {
+                    await logincontroller.pickImage();
+                  },
+                  child: logincontroller.selectedProfile.value == ''
+                      ? CircleAvatar(
+                          radius: 80,
+                          backgroundImage: NetworkImage(
+                              logincontroller.loginuser.value!.profile),
+                        )
+                      : CircleAvatar(
+                          radius: 80,
+                          backgroundImage: FileImage(
+                              File(logincontroller.selectedProfile.value)),
+                        ),
                 ),
-                20.heightBox,
-                ProfileWidget(context, nameController, 'Name',
-                    logincontroller.loginuser.value?.name, Icons.person),
-                // 7.heightBox,
-                Divider(thickness: 0.5),
-                ProfileWidget(context, aboutController, 'About',
-                    logincontroller.loginuser.value?.about, Icons.info_outline),
-                //  7.heightBox,
-                Divider(thickness: 0.5),
-                ListTile(
-                  visualDensity: VisualDensity.compact,
-                  leading: Icon(Icons.phone,
-                      size: MediaQuery.of(context).size.width * 0.06,
-                      color: Colors.grey.shade600),
-                  title: Text("Phone"),
-                  titleTextStyle:
-                      TextStyle(color: Colors.grey.shade600, fontSize: 15),
-                  subtitle: Text(
-                    logincontroller.loginuser.value!.phone,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold),
-                  ),
+              ),
+              20.heightBox,
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 50),
+              //   child: Text(
+              //     'Name',
+              //     style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+              //   ),
+              // ),
+              ProfileWidget(context, nameController, 'Name',
+                  logincontroller.loginuser.value?.name, Icons.person),
+              //7.heightBox,
+              Divider(thickness: 0.5),
+              ProfileWidget(context, aboutController, 'About',
+                  logincontroller.loginuser.value?.about, Icons.info_outline),
+              //  7.heightBox,
+              Divider(thickness: 0.5),
+              ListTile(
+                visualDensity: VisualDensity.compact,
+                leading: Icon(Icons.phone,
+                    size: MediaQuery.of(context).size.width * 0.06,
+                    color: Colors.grey.shade600),
+                title: Text("Phone"),
+                titleTextStyle:
+                    TextStyle(color: Colors.grey.shade600, fontSize: 15),
+                subtitle: Text(
+                  logincontroller.loginuser.value!.phone,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

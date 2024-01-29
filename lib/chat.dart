@@ -1,4 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:whatsapp/controllers/homeController.dart';
+import 'package:whatsapp/controllers/loginController.dart';
+import 'package:whatsapp/model/messageModel.dart';
 
 class chat1 extends StatelessWidget {
   const chat1({super.key});
@@ -73,7 +79,7 @@ class chat1 extends StatelessWidget {
   }
 }
 
-Widget chat(context) {
+Widget chat(context, oppuser) {
   return Container(
     color: Colors.white,
     height: 80,
@@ -112,7 +118,8 @@ Widget chat(context) {
                                   showModalBottomSheet(
                                       backgroundColor: Colors.transparent,
                                       context: context,
-                                      builder: (builder) => bottomsheet());
+                                      builder: (builder) =>
+                                          bottomsheet(oppuser));
                                 },
                                 icon: Icon(Icons.attach_file),
                               ),
@@ -144,7 +151,9 @@ Widget chat(context) {
   );
 }
 
-Widget bottomsheet() {
+Widget bottomsheet(oppuser) {
+  final controller = Get.put(HomeController());
+ 
   return Container(
     height: 278,
     width: 400,
@@ -158,15 +167,21 @@ Widget bottomsheet() {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 iconcreation(
-                    Icons.insert_drive_file, Colors.indigo, "Documents"),
+                    Icons.insert_drive_file, Colors.indigo, "Documents", () {}),
                 SizedBox(
                   width: 40,
                 ),
-                iconcreation(Icons.camera_alt, Colors.pink, "Camera"),
+                iconcreation(Icons.camera_alt, Colors.pink, "Camera", () {
+                  Get.back();
+                  controller.sendImagesFromCamera(oppuser);
+                }),
                 SizedBox(
                   width: 40,
                 ),
-                iconcreation(Icons.insert_photo, Colors.purple, "Gallary"),
+                iconcreation(Icons.insert_photo, Colors.purple, "Gallary", () {
+                  Get.back();
+                  controller.sendImagesFromGallery(oppuser);
+                }),
               ],
             ),
             SizedBox(
@@ -175,15 +190,16 @@ Widget bottomsheet() {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                iconcreation(Icons.headset, Colors.orange, "Audio"),
+                iconcreation(Icons.headset, Colors.orange, "Audio", () {}),
                 SizedBox(
                   width: 40,
                 ),
-                iconcreation(Icons.location_pin, Colors.teal, "Location"),
+                iconcreation(
+                    Icons.location_pin, Colors.teal, "Location", () {}),
                 SizedBox(
                   width: 40,
                 ),
-                iconcreation(Icons.person, Colors.blue, "Contact"),
+                iconcreation(Icons.person, Colors.blue, "Contact", () {}),
               ],
             ),
           ],
@@ -193,9 +209,9 @@ Widget bottomsheet() {
   );
 }
 
-Widget iconcreation(IconData icon, Color color, String text) {
+Widget iconcreation(IconData icon, Color color, String text, ontap) {
   return InkWell(
-    onTap: () {},
+    onTap: ontap,
     child: Column(
       children: [
         CircleAvatar(

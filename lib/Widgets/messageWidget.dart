@@ -8,6 +8,7 @@ Widget RecieverMessageWidget(context, Message message) {
     child: Padding(
       padding: const EdgeInsets.only(right: 0, top: 10),
       child: Container(
+        width: MediaQuery.of(context).size.width / 1.5,
         child: ClipPath(
           clipper: UpperNipMessageClipperTwo(MessageType.receive),
           child: Container(
@@ -17,10 +18,12 @@ Widget RecieverMessageWidget(context, Message message) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${message.message}',
-                  style: TextStyle(fontSize: 17),
-                ),
+                message.type == Type.Image
+                    ? Image.network(message.message)
+                    : Text(
+                        '${message.message}',
+                        style: TextStyle(fontSize: 17),
+                      ),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -42,15 +45,18 @@ Widget SenderMessageWidget(context, Message message) {
     child: Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
+        width: MediaQuery.of(context).size.width / 1.5,
         child: ClipPath(
           clipper: UpperNipMessageClipperTwo(MessageType.send),
           child: Container(
             padding: EdgeInsets.only(top: 10, right: 25, left: 10, bottom: 10),
             decoration: BoxDecoration(color: Colors.white),
-            child: Text(
-              '${message.message}',
-              style: TextStyle(fontSize: 17),
-            ),
+            child: message.type == Type.Image
+                ? Image.network(message.message)
+                : Text(
+                    '${message.message}',
+                    style: TextStyle(fontSize: 17),
+                  ),
           ),
         ),
       ),

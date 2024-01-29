@@ -1,6 +1,10 @@
+ import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
 import 'package:whatsapp/model/messageModel.dart';
@@ -9,11 +13,57 @@ class HomeController extends GetxController {
   final logincontroller = Get.put(Logincontroller());
 
   RxString enteredMessage = ''.obs;
+  RxString msgImage = ''.obs;
+
+  Future pickGalleryImage() async {
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      return;
+    } else {
+      msgImage.value = image.path;
+      return image.path;
+    }
+  }
+
+  pickCameraImage() async {
+    var image = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (image == null) {
+      return;
+    } else {
+      msgImage.value = image.path;
+      return image.path;
+    }
+  }
+
+  sendImagesFromGallery(oppuser) {
+    pickGalleryImage().then((value) async {
+      final time = DateTime.now().millisecondsSinceEpoch.toString();
+      logincontroller
+          .storeDataInStorage(
+              '/chatImages/${logincontroller.loginuser.value?.id}_$time',
+              File(msgImage.value))
+          .then((image) {
+        sendmessage(oppuser, image, Type.Image);
+      });
+    });
+  }
+
+  sendImagesFromCamera(oppuser) {
+    pickCameraImage().then((value) async {
+      final time = DateTime.now().millisecondsSinceEpoch.toString();
+      logincontroller
+          .storeDataInStorage(
+              '/chatImages/${logincontroller.loginuser.value?.id}_$time',
+              File(msgImage.value))
+          .then((image) {
+        sendmessage(oppuser, image, Type.Image);
+      });
+    });
+  }
 
   sendmessage(ChatUser oppUser, mymessage, Type type) async {
     var time = DateTime.now().millisecondsSinceEpoch.toString();
-    
-    
+
     final message = Message(
         fromId: logincontroller.loginuser.value!.id,
         toId: oppUser.id,
@@ -110,4 +160,20 @@ class HomeController extends GetxController {
     }
     return 'NA';
   }
+
+  //send image in chat
+  // Future<String> sendChatImage(ChatUser chatUser, File file) async {
+  //   final ext = file.path.split('.').last;
+
+  //   final ref = logincontroller.storage.ref().child(
+  //       'images/${generateChatId(chatUser)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+
+  //   await ref
+  //       .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+  //       .then((p0) {
+  //     log('data transfered: ${p0.bytesTransferred / 1000} kb');
+  //   });
+
+  //   return await ref.getDownloadURL();
+  // }
 }

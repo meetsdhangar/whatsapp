@@ -47,6 +47,7 @@ dependencies:
   image: ^4.1.4
   path_provider: ^2.1.2
   custom_clippers: ^2.0.0
+  emoji_picker_flutter: ^1.6.4
   
   
 

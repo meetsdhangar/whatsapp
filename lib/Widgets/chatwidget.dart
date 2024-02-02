@@ -1,17 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
+import 'package:whatsapp/model/groupModel.dart';
 import 'package:whatsapp/screens/chatscreen.dart';
 
 Widget Chatwidget() {
   final logincontroller = Get.find<Logincontroller>();
   final homecontroller = Get.put(HomeController());
-  return Column(
-    children: [
-      Expanded(
-        child: StreamBuilder(
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        StreamBuilder(
+            stream: logincontroller.firestore.collection('groups').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Group> groups = [];
+                var totaldata = snapshot.data?.docs;
+
+                groups = totaldata!
+                        .map(
+                          (e) => Group.fromMap(e.data()),
+                        )
+                        .toList() ??
+                    [];
+
+
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: groups.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text('${groups[index].groupName}'),
+                      );
+                    });
+              } else {
+                return ListTile(
+                  title: Text('no data'),
+                );
+              }
+            }),
+        StreamBuilder(
             stream: logincontroller.firestore
                 .collection('users')
                 // .where('id',
@@ -25,6 +58,8 @@ Widget Chatwidget() {
                     data?.map((e) => ChatUser.fromMap(e.data())).toList() ?? [];
 
                 return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     return Padding(
@@ -79,7 +114,7 @@ Widget Chatwidget() {
                 ));
               }
             }),
-      ),
-    ],
+      ],
+    ),
   );
 }

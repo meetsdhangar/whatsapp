@@ -1,4 +1,5 @@
- import 'dart:io';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,13 +8,43 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
+import 'package:whatsapp/model/groupModel.dart';
 import 'package:whatsapp/model/messageModel.dart';
+import 'package:whatsapp/screens/homeScreen.dart';
 
 class HomeController extends GetxController {
   final logincontroller = Get.put(Logincontroller());
-
+  RxBool obxcheck = false.obs;
   RxString enteredMessage = ''.obs;
   RxString msgImage = ''.obs;
+  RxBool showemoji = false.obs;
+
+  RxList totalmembers = [].obs;
+
+  RxList selectedMembers = [].obs;
+
+  manageSelectedMembers(chatuser) {
+    if (selectedMembers.contains(chatuser)) {
+      selectedMembers.remove(chatuser);
+    } else {
+      selectedMembers.add(chatuser);
+    }
+
+    print(selectedMembers.value);
+  }
+
+  addRemoveMember(index) {
+    if (selectedMembers.any((element) => element.id == index.id)) {
+      selectedMembers.removeWhere((element) => element.id == index.id);
+    } else {
+      selectedMembers.add(index);
+    }
+    print(index);
+  }
+
+  void updateEnteredMessage(String message) {
+    enteredMessage.value = message;
+  }
 
   Future pickGalleryImage() async {
     var image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -161,19 +192,42 @@ class HomeController extends GetxController {
     return 'NA';
   }
 
-  //send image in chat
-  // Future<String> sendChatImage(ChatUser chatUser, File file) async {
-  //   final ext = file.path.split('.').last;
+  List<String> finalList = [];
+  List<String> adminList = [];
+  getFinalGroupList(String loginid) {
+    finalList = [];
+    adminList = [];
+    finalList.add(loginid);
+    adminList.add(loginid);
+    for (var i = 0; i < selectedMembers.length; i++) {
+      finalList.add(selectedMembers[i].id);
+    }
+  }
 
-  //   final ref = logincontroller.storage.ref().child(
-  //       'images/${generateChatId(chatUser)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+  addNewGroup(String groupname, File groupImage) async {
+    var time = DateTime.now().millisecondsSinceEpoch.toString();
 
-  //   await ref
-  //       .putFile(file, SettableMetadata(contentType: 'image/$ext'))
-  //       .then((p0) {
-  //     log('data transfered: ${p0.bytesTransferred / 1000} kb');
-  //   });
+    await logincontroller
+        .storeDataInStorage('groupProfile/${groupname}', groupImage)
+        .then((url) {
+      var group = Group(
+          groupName: groupname,
+          groupId: '${groupname}_$time',
+          members: finalList,
+          createdAt: time,
+          admins: adminList,
+          image: url);
 
-  //   return await ref.getDownloadURL();
-  // }
+      logincontroller.firestore
+          .collection('groups')
+          .doc('${groupname}_$time')
+          .set(group.toMap())
+          .then((value) => Get.offAll(HomeScreen()));
+
+      selectedMembers.clear();
+      finalList.clear();
+      logincontroller.selectedProfile.value = '';
+      adminList.clear();
+    });
+  }
 }

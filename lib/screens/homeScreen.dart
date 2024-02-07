@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/Utils/colors.dart';
+import 'package:whatsapp/Widgets/groupWidget.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/Widgets/callswidget.dart';
 import 'package:whatsapp/Widgets/chatwidget.dart';
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var size = MediaQuery.of(context).size;
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -141,6 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 40,
                     child: Center(
                         child: Text(
+                      "Group",
+                      style: TextStyle(color: Colors.white),
+                    ))),
+                Container(
+                    width: size.width,
+                    height: 40,
+                    child: Center(
+                        child: Text(
                       "Status",
                       style: TextStyle(color: Colors.white),
                     ))),
@@ -154,29 +163,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     ))),
               ]),
         ),
-        floatingActionButton: InkWell(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return Selectcontact();
-              },
-            ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.message,
+            color: Colors.white,
           ),
-          child: Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-                color: tealDarkGreenColor,
-                borderRadius: BorderRadius.circular(50)),
-            child: Icon(
-              Icons.message,
-              color: Colors.white,
-            ),
-          ),
+          backgroundColor: tealDarkGreenColor,
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Selectcontact(),
+            ));
+          },
         ),
         body: TabBarView(
-          children: [Chatwidget(), StatusWidget(context), Callswidget()],
+          children: [
+            Chatwidget(),
+            GroupWidget(),
+            StatusWidget(context),
+            Callswidget(),
+          ],
         ),
       ),
     );

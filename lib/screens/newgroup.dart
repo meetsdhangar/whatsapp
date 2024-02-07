@@ -4,7 +4,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/screens/groupcreateScreen.dart';
-
+import 'package:whatsapp/screens/homeScreen.dart';
 
 class NewGroup extends StatelessWidget {
   final List memberlist;
@@ -26,7 +26,7 @@ class NewGroup extends StatelessWidget {
                 backgroundColor: Color(0xff075E54),
                 leading: InkWell(
                     onTap: () {
-                      Get.back();
+                      Get.offAll(() => HomeScreen());
                       homecontroller.selectedMembers.clear();
                     },
                     child: Icon(Icons.arrow_back)),
@@ -56,7 +56,9 @@ class NewGroup extends StatelessWidget {
               floatingActionButton: FloatingActionButton(
                 backgroundColor: Color(0xff075E54),
                 onPressed: () {
-                  Get.to(() => GroupCreateScreen());
+                  if (homecontroller.selectedMembers.isNotEmpty) {
+                    Get.to(() => GroupCreateScreen());
+                  }
                 },
                 child: Icon(
                   Icons.arrow_forward,

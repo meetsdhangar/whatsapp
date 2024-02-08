@@ -100,7 +100,7 @@ Widget GroupRecieverMessageWidget(context, GroupMessage message) {
       child: Row(
         children: [
           Container(
-            child: Image.network(message.fromId),
+child: Image.network(message.fromId),
             height: 30,
             width: 30,
             decoration: BoxDecoration(

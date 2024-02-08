@@ -29,7 +29,7 @@ class Selectcontact extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             Text(
-              "302 contacts",
+              "${homecontroller.totalmembers.length} Contacts",
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ],
@@ -145,32 +145,3 @@ class Selectcontact extends StatelessWidget {
     );
   }
 }
-// Theme(
-//             data: Theme.of(context).copyWith(
-//               iconTheme: IconThemeData(
-//                 color: Colors.white,
-//               ),
-//             ),
-//             child: PopupMenuButton<String>(onSelected: (value) {
-//               print("Value");
-//             }, itemBuilder: (BuildContext contesxt) {
-//               return [
-//                 PopupMenuItem(
-//                   child: Text("Invite a friend"),
-//                   value: "Invite a friend",
-//                 ),
-//                 PopupMenuItem(
-//                   child: Text("Contacts"),
-//                   value: "Contacts",
-//                 ),
-//                 PopupMenuItem(
-//                   child: Text("Refresh"),
-//                   value: "Refresh",
-//                 ),
-//                 PopupMenuItem(
-//                   child: Text(" Help"),
-//                   value: "Help ",
-//                 ),
-//               ];
-//             }),
-//           ),

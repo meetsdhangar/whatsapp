@@ -58,6 +58,7 @@ class NewGroup extends StatelessWidget {
                 onPressed: () {
                   if (homecontroller.selectedMembers.isNotEmpty) {
                     Get.to(() => GroupCreateScreen());
+                    homecontroller.selectedMembers.value = [];
                   }
                 },
                 child: Icon(

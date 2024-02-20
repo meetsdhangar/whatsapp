@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/model/messageModel.dart';
 
+import '../model/chatuserModel.dart';
 import '../model/groupMessage.dart';
 
 Widget RecieverMessageWidget(context, Message message) {
@@ -98,14 +99,37 @@ Widget GroupRecieverMessageWidget(context, GroupMessage message) {
     child: Padding(
       padding: const EdgeInsets.only(right: 0, top: 10),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-child: Image.network(message.fromId),
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-                color: Colors.amber, borderRadius: BorderRadius.circular(30)),
-          ),
+          StreamBuilder(
+              stream: homecontroller.getSingleUser(message.fromId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<ChatUser> users = [];
+                  final data = snapshot.data?.docs;
+                  users =
+                      data?.map((e) => ChatUser.fromMap(e.data())).toList() ??
+                          [];
+
+                  return Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(users[0].profile)),
+                        //color: Colors.amber,
+                        borderRadius: BorderRadius.circular(30)),
+                  );
+                } else {
+                  return Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(30)),
+                  );
+                }
+              }),
           Container(
             width: MediaQuery.of(context).size.width / 1.5,
             child: ClipPath(

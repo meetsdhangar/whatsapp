@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -42,9 +43,11 @@ class GroupCreateScreen extends StatelessWidget {
               ),
               backgroundColor: tealDarkGreenColor,
               onPressed: () async {
+                print(textController.text);
                 await homecontroller
                     .getFinalGroupList(logincontroller.loginuser.value!.id);
                 if (textController.text != '') {
+                  log('selected profile: ${loginController.selectedProfile.value}');
                   if (loginController.selectedProfile.value == '') {
                     await loginController
                         .assetImageToFile('assets/images/empty_user.jpg')
@@ -55,9 +58,7 @@ class GroupCreateScreen extends StatelessWidget {
                     homecontroller.addNewGroup(textController.text,
                         File(loginController.selectedProfile.value));
                   }
-                } else {
-                  print("enter name");
-                }
+                } else {}
               }),
           body: Padding(
             padding: const EdgeInsets.only(left: 5, top: 15, right: 5),

@@ -24,6 +24,12 @@ class Logincontroller extends GetxController {
   RxString verId = ''.obs;
   Rx<ChatUser?> loginuser = Rx<ChatUser?>(null);
 
+  RxInt tabIndex = 0.obs;
+
+  changetabIndex(index) {
+    tabIndex.value = index;
+  }
+
   Future<bool> checkuser() async {
     return (await firestore
             .collection('users')
@@ -34,10 +40,12 @@ class Logincontroller extends GetxController {
 
   checkuserlogin() {
     var user = auth.currentUser;
+    log(user.toString());
     if (user == null) {
       Get.offAll(() => login());
     } else {
       //Get.offAll(() => chatpage());
+
       getUsersData().then((value) => Get.offAll(() => HomeScreen()));
     }
   }
@@ -172,21 +180,26 @@ class Logincontroller extends GetxController {
   }
 
   Future<bool> getUsersData() async {
-    await firestore
-        .collection('users')
-        .doc('${auth.currentUser?.phoneNumber}')
-        .get()
-        .then((DocumentSnapshot snapshot) => loginuser.value = ChatUser(
-            isActive: snapshot['is_active'],
-            lastSeen: snapshot['last_seen'],
-            phone: snapshot['phone'],
-            profile: snapshot['profile'],
-            about: snapshot['about'],
-            name: snapshot['name'],
-            createdAt: snapshot['created_at'],
-            id: snapshot['id']));
+    try {
+      await firestore
+          .collection('users')
+          .doc('${auth.currentUser?.phoneNumber}')
+          .get()
+          .then((DocumentSnapshot snapshot) => loginuser.value = ChatUser(
+              isActive: snapshot['is_active'],
+              lastSeen: snapshot['last_seen'],
+              phone: snapshot['phone'],
+              profile: snapshot['profile'],
+              about: snapshot['about'],
+              name: snapshot['name'],
+              createdAt: snapshot['created_at'],
+              id: snapshot['id']));
 
-    return true;
+      return true;
+    } catch (e) {
+      log("$e");
+      return false;
+    }
   }
 
   updateUserData(String username, String userabout, String image) async {

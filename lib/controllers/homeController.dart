@@ -19,6 +19,8 @@ class HomeController extends GetxController {
   RxString enteredMessage = ''.obs;
   RxString msgImage = ''.obs;
   RxBool showemoji = false.obs;
+  var stopNotification = false.obs;
+  var chatlock = false.obs;
 
   RxList totalmembers = [].obs;
 
@@ -277,5 +279,18 @@ class HomeController extends GetxController {
       logincontroller.selectedProfile.value = '';
       adminList.clear();
     });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSingleUser(userid) {
+    return logincontroller.firestore
+        .collection('users')
+        .where('id', isEqualTo: '$userid')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getGroupImages(Group group) {
+    return logincontroller.firestore
+        .collection('groupchats/${group.groupId}/messages')
+        .snapshots();
   }
 }

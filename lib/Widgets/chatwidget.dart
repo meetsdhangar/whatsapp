@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/Utils/colors.dart';
 
 import 'package:whatsapp/controllers/homeController.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
+
+import 'package:whatsapp/screens/allinformation.dart';
 
 import 'package:whatsapp/screens/chatscreen.dart';
 
@@ -13,7 +16,6 @@ Widget Chatwidget() {
   return SingleChildScrollView(
     child: Column(
       children: [
-        
         StreamBuilder(
             stream: logincontroller.firestore
                 .collection('users')
@@ -33,25 +35,91 @@ Widget Chatwidget() {
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(users[index].profile),
-                      ),
-                      title: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => Chatscreen(
                               oppUser: users[index],
                             ),
-                          ));
+                          ),
+                        );
+                      },
+                      leading: InkWell(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(),
+                                  contentPadding: EdgeInsets.zero,
+                                  content: Container(
+                                    height: 300,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      users[index].profile))),
+                                        )),
+                                        Container(
+                                          height: 50,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          color: Colors.white,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  Get.off(() => Chatscreen(
+                                                      oppUser: users[index]));
+                                                },
+                                                child: Icon(
+                                                  Icons.message,
+                                                  color: greenLight,
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.call,
+                                                color: greenLight,
+                                              ),
+                                              Icon(
+                                                Icons.video_call,
+                                                color: greenLight,
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Get.off(() => AllInformation(
+                                                      user: users[index]));
+                                                },
+                                                child: Icon(
+                                                  Icons.info_rounded,
+                                                  color: greenLight,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
                         },
-                        child: Text(
-                          users[index].id == logincontroller.loginuser.value!.id
-                              ? "Me"
-                              : users[index].name,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(users[index].profile),
                         ),
+                      ),
+                      title: Text(
+                        users[index].id == logincontroller.loginuser.value!.id
+                            ? "Me"
+                            : users[index].name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                       subtitle: Row(
                         children: [
@@ -71,10 +139,9 @@ Widget Chatwidget() {
                   },
                 );
               } else {
-                return ScaffoldMessenger(
-                    child: Center(
-                  child: Text("Loading Data"),
-                ));
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               }
             }),
       ],

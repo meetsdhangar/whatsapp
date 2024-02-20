@@ -5,8 +5,11 @@ import 'package:whatsapp/controllers/homeController.dart';
 
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/model/chatuserModel.dart';
+import 'package:whatsapp/screens/allinformation.dart';
 import 'package:whatsapp/screens/chatscreen.dart';
 import 'package:whatsapp/screens/newgroup.dart';
+
+import '../Utils/colors.dart';
 
 class Selectcontact extends StatelessWidget {
   const Selectcontact({super.key});
@@ -40,106 +43,170 @@ class Selectcontact extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: () {
-                Get.to(() => NewGroup(
-                      memberlist: homecontroller.totalmembers.value,
-                    ));
-              },
-              child: ListTile(
-                //contentPadding: EdgeInsets.all(0),
-                contentPadding:
-                    EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 0),
-                leading: CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 15, 139, 125),
-                  radius: 24,
-                  child: Icon(
-                    Icons.group,
-                    color: Colors.white,
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  Get.to(() => NewGroup(
+                        memberlist: homecontroller.totalmembers.value,
+                      ));
+                },
+                child: ListTile(
+                  //contentPadding: EdgeInsets.all(0),
+                  contentPadding:
+                      EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 0),
+                  leading: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 15, 139, 125),
+                    radius: 24,
+                    child: Icon(
+                      Icons.group,
+                      color: Colors.white,
+                    ),
                   ),
+                  title: Text("New Group"),
+                  titleTextStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17),
                 ),
-                title: Text("New Group"),
-                titleTextStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17),
               ),
-            ),
-            10.heightBox,
-            Padding(
-              padding: const EdgeInsets.only(left: 13),
-              child: Text(
-                "Contacts on WhatsApp",
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+              10.heightBox,
+              Padding(
+                padding: const EdgeInsets.only(left: 13),
+                child: Text(
+                  "Contacts on WhatsApp",
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+                ),
               ),
-            ),
-            10.heightBox,
-            StreamBuilder(
-                stream: logincontroller.firestore
-                    .collection('users')
-                    .where('id',
-                        isNotEqualTo: logincontroller.loginuser.value?.id)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<ChatUser> users = [];
-                    final data = snapshot.data?.docs;
-                    users =
-                        data?.map((e) => ChatUser.fromMap(e.data())).toList() ??
-                            [];
-                    homecontroller.totalmembers.value = [];
-                    homecontroller.totalmembers.addAll(users);
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 10, left: 0, right: 0),
-                          child: ListTile(
-                            leading: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(users[index].profile),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(60),
+              10.heightBox,
+              StreamBuilder(
+                  stream: logincontroller.firestore
+                      .collection('users')
+                      .where('id',
+                          isNotEqualTo: logincontroller.loginuser.value?.id)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<ChatUser> users = [];
+                      final data = snapshot.data?.docs;
+                      users = data
+                              ?.map((e) => ChatUser.fromMap(e.data()))
+                              .toList() ??
+                          [];
+                      homecontroller.totalmembers.value = [];
+                      homecontroller.totalmembers.addAll(users);
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: users.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 0, right: 0),
+                            child: ListTile(
+                              onTap: () =>
+                                  Get.off(Chatscreen(oppUser: users[index])),
+                              leading: InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(),
+                                          contentPadding: EdgeInsets.zero,
+                                          content: Container(
+                                            height: 300,
+                                            child: Column(
+                                              children: [
+                                                Expanded(
+                                                    child: Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              users[index]
+                                                                  .profile))),
+                                                )),
+                                                Container(
+                                                  height: 50,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  color: Colors.white,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Get.off(() =>
+                                                              Chatscreen(
+                                                                  oppUser: users[
+                                                                      index]));
+                                                        },
+                                                        child: Icon(
+                                                          Icons.message,
+                                                          color: greenLight,
+                                                        ),
+                                                      ),
+                                                      Icon(
+                                                        Icons.call,
+                                                        color: greenLight,
+                                                      ),
+                                                      Icon(
+                                                        Icons.video_call,
+                                                        color: greenLight,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Get.off(() =>
+                                                              AllInformation(
+                                                                  user: users[
+                                                                      index]));
+                                                        },
+                                                        child: Icon(
+                                                          Icons.info_rounded,
+                                                          color: greenLight,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage:
+                                      NetworkImage(users[index].profile),
+                                ),
                               ),
-                            ),
-                            title: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Chatscreen(
-                                    oppUser: users[index],
-                                  ),
-                                ));
-                              },
-                              child: Text(
+                              title: Text(
                                 users[index].name,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 17),
                               ),
+                              subtitle: Text(
+                                users[index].about,
+                              ),
                             ),
-                            subtitle: Text(
-                              users[index].about,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return ScaffoldMessenger(
-                        child: Center(
-                      child: Text("Loading Data"),
-                    ));
-                  }
-                }),
-          ],
+                          );
+                        },
+                      );
+                    } else {
+                      return ScaffoldMessenger(
+                          child: Center(
+                        child: Text("Loading Data"),
+                      ));
+                    }
+                  }),
+            ],
+          ),
         ),
       ),
     );

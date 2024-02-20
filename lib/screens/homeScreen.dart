@@ -8,6 +8,7 @@ import 'package:whatsapp/Widgets/groupWidget.dart';
 import 'package:whatsapp/controllers/loginController.dart';
 import 'package:whatsapp/Widgets/callswidget.dart';
 import 'package:whatsapp/Widgets/chatwidget.dart';
+
 import 'package:whatsapp/screens/profileScreen.dart';
 import 'package:whatsapp/screens/selectcontact.dart';
 import 'package:whatsapp/Widgets/statuswidget.dart';
@@ -21,9 +22,17 @@ class HomeScreen extends StatefulWidget {
 
 final logincontroller = Get.find<Logincontroller>();
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late TabController tabController;
+
   @override
   void initState() {
+    tabController = TabController(length: 4, vsync: this);
+    tabController.addListener(() {
+      logincontroller.changetabIndex(tabController.index);
+      log('changed index: ${tabController.index.toString()}');
+    });
+
     logincontroller.updateActiveStatus(true);
 
     SystemChannels.lifecycle.setMessageHandler((message) {
@@ -45,12 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final logincontroller = Get.find<Logincontroller>();
     var size = MediaQuery.of(context).size;
 
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
+    return Obx(
+      () => Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: 55,
@@ -121,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 10),
           ],
           bottom: TabBar(
+              controller: tabController,
               labelColor: Colors.amber,
               labelStyle: TextStyle(fontSize: 20),
               unselectedLabelStyle: TextStyle(fontSize: 15),
@@ -163,19 +171,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     ))),
               ]),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.message,
-            color: Colors.white,
-          ),
-          backgroundColor: tealDarkGreenColor,
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Selectcontact(),
-            ));
-          },
-        ),
+        floatingActionButton: logincontroller.tabIndex.value == 0
+            ? FloatingActionButton(
+                backgroundColor: tealDarkGreenColor,
+                onPressed: () {
+                  Get.to(() => Selectcontact());
+                },
+                child: Icon(Icons.message, color: Colors.white),
+              )
+            : logincontroller.tabIndex.value == 1
+                ? FloatingActionButton(
+                    backgroundColor: tealDarkGreenColor,
+                    onPressed: () {
+                      Get.to(() => Selectcontact());
+                    },
+                    child: Icon(Icons.message, color: Colors.white),
+                  )
+                : logincontroller.tabIndex.value == 2
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FloatingActionButton(
+                            backgroundColor: tealDarkGreenColor,
+                            mini: true,
+                            onPressed: () {},
+                            child: Icon(Icons.edit, color: Colors.white),
+                          ),
+                          SizedBox(height: 16),
+                          FloatingActionButton(
+                            backgroundColor: tealDarkGreenColor,
+                            onPressed: () {},
+                            child: Icon(Icons.camera_alt, color: Colors.white),
+                          ),
+                        ],
+                      )
+                    : FloatingActionButton(
+                        backgroundColor: tealDarkGreenColor,
+                        onPressed: () {},
+                        child: Icon(Icons.phone, color: Colors.white),
+                      ),
         body: TabBarView(
+          controller: tabController,
           children: [
             Chatwidget(),
             GroupWidget(),
